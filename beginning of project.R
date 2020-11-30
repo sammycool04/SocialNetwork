@@ -31,6 +31,11 @@ legend("bottomleft",legend=c("Liberal", "Conservative"),
 
 hist((degree(asIgraph(fm_net), mode = "in")))
  
+
+##########################
+# Get in-degree and clusters
+###########################
+set.seed(1)
 degree <- degree(asIgraph(fm_net), mode = "in")
 degree
  
@@ -49,19 +54,14 @@ V(fm_netI)$group <- as.factor(clus_sg$membership)
 V(fm_netI)$degree <- degree
 
 
-plot(fm_net, mode="fruchtermanreingold",
-     vertex.cex =  1, vertex.col = as.factor(membership(clus_sg)))
-
-routes_tidy <- tbl_graph(edges = fm_edges, directed = TRUE)
-
 routes_igraph_tidy <- as_tbl_graph(fm_netI)
 
-ggraph(routes_igraph_tidy, layout = "kk") + 
-  geom_edge_arc(alpha = 0.8) + 
-  scale_edge_width(range = c(0.2, 2)) +
-  geom_node_text(aes(label = vertex.names, color = valence)) +
-  labs(edge_width = "Letters") +
-  theme_graph()
+###############################################################################
+# Looking into differences between groups
+#
+#
+################################################################################
+
 
 
 
@@ -94,5 +94,7 @@ routes_igraph_tidy %>%
   activate(nodes) %>% 
   as_tibble() %>% 
   jmv::ANOVA(dep = degree, factors = list('valence'))
+
+
 
 
